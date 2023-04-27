@@ -32,5 +32,8 @@ let userSchema = mongoose.Schema({
    });
    let EducationalManager = User.discriminator("Educational Manager",educationalManagerSchema);
 
+   let ITManagerSchema = mongoose.Schema({
+   });
+   let ITManager = User.discriminator("IT Manager",ITManagerSchema);
 
-   export {User, Student, Professor, EducationalManager}
+   export {User, Student, Professor, EducationalManager, ITManager}
