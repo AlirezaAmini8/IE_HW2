@@ -15,8 +15,16 @@ let userSchema = mongoose.Schema({
     entryYear: Number,
     entryTerm: Number,
     average: Number,
-    college: String
+    college: String,
+    field: String
    });
    let Student = User.discriminator("Student",studentSchema);
+
+   let professorSchema = mongoose.Schema({
+    college: String,
+    field: String,
+    degree: String
+   });
+   let Professor = User.discriminator("Professor",professorSchema);
 
    export {User, Student}
