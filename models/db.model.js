@@ -36,4 +36,14 @@ let userSchema = mongoose.Schema({
    });
    let ITManager = User.discriminator("IT Manager",ITManagerSchema);
 
-   export {User, Student, Professor, EducationalManager, ITManager}
+   let approvedCourseSchema = mongoose.Schema({
+    name: String,
+    prerequisite: Array(String),
+    requirement: Array(String),
+    Unit: Number,
+    field: String
+   });
+
+   let approvedCourse = mongoose.model("Approved Course", approvedCourseSchema);
+
+   export {User, Student, Professor, EducationalManager, ITManager, approvedCourse}
