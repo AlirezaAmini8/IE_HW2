@@ -10,4 +10,13 @@ let userSchema = mongoose.Schema({
 
    let User = mongoose.model("User", userSchema);
 
-   export default User
+   let studentSchema = mongoose.Schema({
+    grade: String,
+    year: Number,
+    term: Number,
+    average: Number,
+    college: String
+   });
+   let Student = User.discriminator("Student",studentSchema);
+
+   export {User, Student}
