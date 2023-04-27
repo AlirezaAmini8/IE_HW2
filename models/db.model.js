@@ -45,5 +45,18 @@ let userSchema = mongoose.Schema({
    });
 
    let approvedCourse = mongoose.model("Approved Course", approvedCourseSchema);
+   
+   let termCourseSchema = mongoose.Schema({
+    classDate: String,
+    classTime: String,
+    examDate: String,
+    examTime: String,
+    examLocation: String,
+    teacher: { type: mongoose.Schema.Types.ObjectId, ref: 'Professor'},
+    capacity: Number,
+    term: String
+   });
 
-   export {User, Student, Professor, EducationalManager, ITManager, approvedCourse}
+   let termCourse = approvedCourse.discriminator("Term Course", termCourseSchema);
+
+   export {User, Student, Professor, EducationalManager, ITManager, approvedCourse, termCourse}
