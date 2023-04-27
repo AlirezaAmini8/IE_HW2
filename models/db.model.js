@@ -26,5 +26,11 @@ let userSchema = mongoose.Schema({
     degree: String
    });
    let Professor = User.discriminator("Professor",professorSchema);
+   
+   let educationalManagerSchema = mongoose.Schema({
+    college: String,
+   });
+   let EducationalManager = User.discriminator("Educational Manager",educationalManagerSchema);
 
-   export {User, Student}
+
+   export {User, Student, Professor, EducationalManager}
