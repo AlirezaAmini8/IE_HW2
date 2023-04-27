@@ -12,8 +12,8 @@ let userSchema = mongoose.Schema({
 
    let studentSchema = mongoose.Schema({
     grade: String,
-    year: Number,
-    term: Number,
+    entryYear: Number,
+    entryTerm: Number,
     average: Number,
     college: String
    });
