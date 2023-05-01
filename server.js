@@ -1,7 +1,9 @@
 import 'dotenv/config';
 import express from 'express';
 import db from './models/index.js';
-import route from './routes/db.routes.js'
+import route from './routes/index.js';
+import morgan from 'morgan';
+import fs from 'fs';
 
 const app = express();
 
@@ -12,6 +14,13 @@ db.mongoose.connect(db.url).then(()=>{
 })
 
 app.use(express.json())
+
+// create a write stream (in append mode)
+var accessLogStream = fs.createWriteStream('RequestLogs.txt', { flags: 'a' })
+
+// setup the logger
+app.use(morgan('common', { stream: accessLogStream }))
+
 
 app.use(route)
 

@@ -5,12 +5,12 @@ import {User,Student, Professor, EducationalManager, ITManager, approvedCourse, 
 const db ={}
 db.mongoose = mongoose
 db.url = config.uri
-db.users = User(mongoose)
-db.students = Student(mongoose)
-db.professors = Professor(mongoose)
-db.educationalManager = EducationalManager(mongoose)
-db.ITManager = ITManager(mongoose)
-db.approvedCourse = approvedCourse(mongoose)
-db.termCourse = termCourse(mongoose)
+db.users = User
+db.students = Student
+db.professors = Professor
+db.educationalManager = EducationalManager
+db.ITManager = ITManager
+db.approvedCourse = approvedCourse
+db.termCourse = termCourse
 
 export default db
