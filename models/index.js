@@ -5,6 +5,7 @@ import {User,Student, Professor, EducationalManager, ITManager, approvedCourse, 
 const db ={}
 db.mongoose = mongoose
 db.url = config.uri
+db.secret = config.secret
 db.users = User
 db.students = Student
 db.professors = Professor

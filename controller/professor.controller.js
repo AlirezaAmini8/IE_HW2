@@ -34,12 +34,12 @@ const update_Professor =  async (request, response) => {
   }
   catch (error) {
     if(error.kind === 'ObjectId' ) {
-      response.status(404).send({
+      return response.status(404).send({
         message: `Cannot update Professor with id=${id}. Maybe Professor was not found!`
       })
-    }else{
-      response.status(500).send(error)
     }
+    
+    response.status(500).send(error)    
   }
 }
 
@@ -54,15 +54,13 @@ const delete_Professor = async (request, response) => {
     
   } catch (err) {
     if(err.kind === 'ObjectId'){
-        response.status(404).send({
+        return response.status(404).send({
           message: `Cannot delete Professor with id=${id}. Maybe Professor was not found!`
         });
     }
-    else{
-      response.status(500).send({
-        message: `Could not delete Professor with id=${id}`
-      });
-    }
+    response.status(500).send({
+      message: `Could not delete Professor with id=${id}`
+    });
   }
 }
 
@@ -86,15 +84,15 @@ const find_Professor_by_id = async (request, response) => {
     
   } catch (err) {
     if (err.kind === 'ObjectId') {
-      response.status(404).send({
+      return response.status(404).send({
         message: `Cannot find Professor with id=${id}.`
       });
     }
-    else{
-      response.status(500).send({
-        message: `Server can't fulfill the request.`
-      });
-    }
+
+    response.status(500).send({
+      message: `Server can't fulfill the request.`
+    });
+    
   }
 }
 export default { add_Professor, update_Professor , delete_Professor, find_Professors, find_Professor_by_id}
