@@ -14,8 +14,10 @@
     "nodemon": "^2.0.22"
   },
   "dependencies": {
+    "bcryptjs": "^2.4.3",
     "common-log-format": "^2.0.1",
     "dotenv": "^16.0.3",
+    "jsonwebtoken": "^9.0.0",
     "morgan": "^1.10.0"
   }
 }

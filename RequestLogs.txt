@@ -1,0 +1,2 @@
+::1 - - [04/May/2023:09:27:19 +0000] "PUT /admin/Professor/64500c9d345b0 HTTP/1.1" 404 91
+::1 - - [04/May/2023:09:27:36 +0000] "PUT /admin/Professor/64500c9d345b0 HTTP/1.1" 400 41
