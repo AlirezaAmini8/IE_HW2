@@ -7,7 +7,7 @@ const verifyToken = async(request,response) => {
         return response.status(403).send({ auth: false, message: 'No token provided.' });
     }
     try{
-        const decoded = await jwt.verify(token, db.secret);
+        const decoded = await jwt.verify(token.split(' ')[1], db.secret);
         request.userId = decoded.id;
         response.status(200).send(decoded);
     }

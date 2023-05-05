@@ -7,7 +7,6 @@ import fs from 'fs';
 
 const app = express();
 
-console.log(db.url);
 
 db.mongoose.connect(db.url).then(()=>{
     console.log('Connected to database')
