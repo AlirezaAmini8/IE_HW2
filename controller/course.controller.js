@@ -6,12 +6,14 @@ const TermCourse = db.termCourse
 
 const find_Courses = async (request, response) => {
   try {
-    const approvedData = await ApprovedCourse.find({});
-    const termData = await TermCourse.find({});
-    response.status(200).send( {
-        "approved Courses": approvedData,
-        "term Courses": termData
-    });
+    const data = {};
+    if(request.body.isTermCourse){
+        data = await TermCourse.find({});
+    }
+    else{
+        data = await ApprovedCourse.find({});
+    }
+    response.status(200).send(data);
     
   } catch (err) {
     response.status(500).send({

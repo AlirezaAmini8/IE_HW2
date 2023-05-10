@@ -10,7 +10,7 @@ const verifyRole = (roles) => {
       try{
         const decoded = await jwt.verify(token.split(' ')[1], db.secret);
         request.userId = decoded.id;
-        if(!roles.map((element) => element == decoded.role).includes(false))
+        if(roles.map((element) => element == decoded.role).includes(true))
             return next();
         else
             return response.status(403).send({  message: 'No permission' });
