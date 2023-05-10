@@ -1,33 +1,33 @@
 import { request, response } from 'express';
 import db from '../models/index.js'
 
-const Professors = db.professors
+const Students = db.students
 
-const add_Professor = async (request, response) => {
+const add_Student = async (request, response) => {
   const {username, password, email} = request.body
 
     if(!username || !password || !email){
-        return response.status(400).send({ error: 'We need password,username and email to create professor.' })
+        return response.status(400).send({ error: 'We need password,username and email to create student.' })
     }
     try{
         var hashedPassword = bcrypt.hashSync(password, 10);
-        const professor = await Professors.create({
+        const student = await Students.create({
             id : username,
             email : email,
             password : hashedPassword
           });
         
-        response.status(201).send(`Professor created with id=${professor.id} successfully.`)
+        response.status(201).send(`Student created with id=${student.id} successfully.`)
     }
     catch(err){
-        return response.status(500).send("There was a problem registering the professor.")
+        return response.status(500).send("There was a problem registering the student.")
     }
 }
 
-const update_Professor =  async (request, response) => {
+const update_Student =  async (request, response) => {
   
   const updates = Object.keys(request.body)
-  const allowedUpdates = Object.keys(Professors.schema.tree)
+  const allowedUpdates = Object.keys(Students.schema.tree)
   const isValidUpdate = updates.every((update) => allowedUpdates.includes(update))
   const id = request.params.id
 
@@ -36,13 +36,13 @@ const update_Professor =  async (request, response) => {
   }
 
   try {  
-    await Professors.findByIdAndUpdate(id,request.body)
+    await Students.findByIdAndUpdate(id,request.body)
     response.status(200).send(`Updated successfully.`)
   }
   catch (error) {
     if(error.kind === 'ObjectId' ) {
       return response.status(404).send({
-        message: `Cannot update Professor with id=${id}. Maybe Professor was not found!`
+        message: `Cannot update student with id=${id}. Maybe student was not found!`
       })
     }
     
@@ -50,30 +50,30 @@ const update_Professor =  async (request, response) => {
   }
 }
 
-const delete_Professor = async (request, response) => {
+const delete_Student = async (request, response) => {
   const id = request.params.id;
   
   try {  
-    await Professors.findByIdAndRemove(id);
+    await Students.findByIdAndRemove(id);
     response.status(200).send({
-    message: "Professor was deleted successfully!"
+    message: "Student was deleted successfully!"
     });
     
   } catch (err) {
     if(err.kind === 'ObjectId'){
         return response.status(404).send({
-          message: `Cannot delete Professor with id=${id}. Maybe Professor was not found!`
+          message: `Cannot delete student with id=${id}. Maybe student was not found!`
         });
     }
     response.status(500).send({
-      message: `Could not delete Professor with id=${id}`
+      message: `Could not delete student with id=${id}`
     });
   }
 }
 
-const find_Professors = async (request, response) => {
+const find_Students = async (request, response) => {
   try {
-    const data = await Professors.find({});
+    const data = await Students.find({});
     response.status(200).send(data);
     
   } catch (err) {
@@ -83,16 +83,16 @@ const find_Professors = async (request, response) => {
   }
 }
 
-const find_Professor_by_id = async (request, response) => {
+const find_Student_by_id = async (request, response) => {
   const id = request.params.id;
   try {  
-    await Professors.findById(id);
+    await Students.findById(id);
     response.status(200).send(data);
     
   } catch (err) {
     if (err.kind === 'ObjectId') {
       return response.status(404).send({
-        message: `Cannot find Professor with id=${id}.`
+        message: `Cannot find student with id=${id}.`
       });
     }
 
@@ -102,4 +102,4 @@ const find_Professor_by_id = async (request, response) => {
     
   }
 }
-export default { add_Professor, update_Professor , delete_Professor, find_Professors, find_Professor_by_id}
+export default { add_Student, update_Student , delete_Student, find_Students, find_Student_by_id}
