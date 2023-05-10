@@ -1,23 +1,35 @@
 import db from '../models/index.js';
 import jwt from 'jsonwebtoken'
 
-const verifyToken = async(request,response) => {
-    var token = request.headers['access-token'];
-    if (!token) {
-        return response.status(403).send({ auth: false, message: 'No token provided.' });
-    }
-    try{
+const verifyRole = (roles) => {
+    return async (request, response, next) => {
+      var token = request.headers['access-token'];
+      if (!token) {
+          return response.status(403).send({ auth: false, message: 'No token provided.' });
+      }
+      try{
         const decoded = await jwt.verify(token.split(' ')[1], db.secret);
         request.userId = decoded.id;
-        response.status(200).send(decoded);
+        if(!roles.map((element) => element == decoded.role).includes(false))
+            return next();
+        else
+            return response.status(403).send({  message: 'No permission' });
     }
     catch(err){
-        return res.status(500).send({
+        return response.status(500).send({
             auth: false, message: 'Failed to authenticate token.' 
         });
     }
-}
+  }
+};
+
+// const verifyTokenAndRole = async(request, response, next) => {
+//     const middlewareFn = verifyRole(...roles);
+//     await middlewareFn(request, response, next);
+//   };
+
 const authJWT = {
-    verifyToken
+    // verifyTokenAndRole,
+    verifyRole
 };
 export {authJWT}

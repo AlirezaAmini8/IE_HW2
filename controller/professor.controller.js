@@ -4,17 +4,24 @@ import db from '../models/index.js'
 const Professors = db.professors
 
 const add_Professor = async (request, response) => {
-  try {
-    const professor = new Professors(request.body)
-    const data = await professor.save();
-    response.status(201).send(data);
+  const {username, password, email} = request.body
 
-  } catch (err) {
-    response.status(500).send({
-      message:
-        err.message || "Some error occurred while creating the Professor."
-    });
-  }
+    if(!username || !password || !email){
+        return response.status(400).send({ error: 'We need password,username and email to create user.' })
+    }
+    try{
+        var hashedPassword = bcrypt.hashSync(password, 10);
+        const professor = await Professors.create({
+            id : username,
+            email : email,
+            password : hashedPassword
+          });
+        
+        response.status(201).send(`Professor created with id=${professor.id} successfully.`)
+    }
+    catch(err){
+        return response.status(500).send("There was a problem registering the professor.")
+    }
 }
 
 const update_Professor =  async (request, response) => {

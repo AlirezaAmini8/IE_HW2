@@ -14,4 +14,13 @@ db.ITManager = ITManager
 db.approvedCourse = approvedCourse
 db.termCourse = termCourse
 
+const Roles = {
+	PROFESSOR: "professor",
+	STUDENT: "student",
+	EDUCATIONALMANAGER: "educationalmanager",
+	ITMANAGER: "itmanager"
+}
+
+db.ROLES = Roles
+
 export default db
