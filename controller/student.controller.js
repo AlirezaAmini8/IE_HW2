@@ -36,8 +36,13 @@ const update_Student =  async (request, response) => {
   }
 
   try {  
-    await Students.findByIdAndUpdate(id,request.body)
-    response.status(200).send(`Updated successfully.`)
+    if(request.roleType == db.ROLES.ITMANAGER || (request.roleType == db.ROLES.STUDENT && request.userId == id)){
+        await Students.findByIdAndUpdate(id,request.body)
+        response.status(200).send(`Updated successfully.`)
+    }
+    else{
+        response.status(403).send(`You can't update other students information.`)
+    }
   }
   catch (error) {
     if(error.kind === 'ObjectId' ) {

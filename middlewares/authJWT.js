@@ -2,7 +2,7 @@ import db from '../models/index.js';
 import jwt from 'jsonwebtoken'
 
 const verifyRole = (roles) => {
-    return async (request, response, next) => {
+    return async (request, response) => {
       var token = request.headers['access-token'];
       if (!token) {
           return response.status(403).send({ auth: false, message: 'No token provided.' });
@@ -10,8 +10,10 @@ const verifyRole = (roles) => {
       try{
         const decoded = await jwt.verify(token.split(' ')[1], db.secret);
         request.userId = decoded.id;
-        if(roles.map((element) => element == decoded.role).includes(true))
-            return next();
+        if(roles.map((element) => element == decoded.role).includes(true)){
+            request.roleType = decoded.role;
+            return response.status(200).send({ auth: true, role: decoded.role, message: 'you could access.'});
+        }
         else
             return response.status(403).send({  message: 'No permission' });
     }
@@ -23,13 +25,7 @@ const verifyRole = (roles) => {
   }
 };
 
-// const verifyTokenAndRole = async(request, response, next) => {
-//     const middlewareFn = verifyRole(...roles);
-//     await middlewareFn(request, response, next);
-//   };
-
 const authJWT = {
-    // verifyTokenAndRole,
     verifyRole
 };
 export {authJWT}
