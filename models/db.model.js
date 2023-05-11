@@ -1,4 +1,4 @@
-import mongoose from "mongoose"
+import mongoose from "mongoose";
 
 let userSchema = mongoose.Schema({
     name: String,
@@ -38,8 +38,8 @@ let userSchema = mongoose.Schema({
 
    let approvedCourseSchema = mongoose.Schema({
     name: String,
-    prerequisite: Array({ type: mongoose.Schema.Types.ObjectId, ref: 'this'}),
-    requirement: Array({ type: mongoose.Schema.Types.ObjectId, ref: 'this'}),
+    prerequisite: Array({ type: mongoose.Schema.Types.ObjectId, ref: this}),
+    requirement: Array({ type: mongoose.Schema.Types.ObjectId, ref: this}),
     Unit: Number,
     field: String
    });
@@ -59,4 +59,4 @@ let userSchema = mongoose.Schema({
 
    let termCourse = approvedCourse.discriminator("Term Course", termCourseSchema);
 
-   export {User, Student, Professor, EducationalManager, ITManager, approvedCourse, termCourse}
+   export {User, Student, Professor, EducationalManager, ITManager, approvedCourse, termCourse};

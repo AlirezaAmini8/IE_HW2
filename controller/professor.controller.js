@@ -1,13 +1,13 @@
 import { request, response } from 'express';
-import db from '../models/index.js'
+import db from '../models/index.js';
 
-const Professors = db.professors
+const Professors = db.professors;
 
 const add_Professor = async (request, response) => {
-  const {username, password, email} = request.body
+  const {username, password, email} = request.body;
 
     if(!username || !password || !email){
-        return response.status(400).send({ error: 'We need password,username and email to create professor.' })
+        return response.status(400).send({ error: 'We need password,username and email to create professor.' });
     }
     try{
         var hashedPassword = bcrypt.hashSync(password, 10);
@@ -17,41 +17,41 @@ const add_Professor = async (request, response) => {
             password : hashedPassword
           });
         
-        response.status(201).send(`Professor created with id=${professor.id} successfully.`)
+        response.status(201).send(`Professor created with id=${professor.id} successfully.`);
     }
     catch(err){
-        return response.status(500).send("There was a problem registering the professor.")
+        return response.status(500).send("There was a problem registering the professor.");
     }
 }
 
 const update_Professor =  async (request, response) => {
   
-  const updates = Object.keys(request.body)
-  const allowedUpdates = Object.keys(Professors.schema.tree)
-  const isValidUpdate = updates.every((update) => allowedUpdates.includes(update))
-  const id = request.params.id
+  const updates = Object.keys(request.body);
+  const allowedUpdates = Object.keys(Professors.schema.tree);
+  const isValidUpdate = updates.every((update) => allowedUpdates.includes(update));
+  const id = request.params.id;
 
   if (!isValidUpdate) {
-    return response.status(400).send({ error: 'Invalid parameters for update' })
+    return response.status(400).send({ error: 'Invalid parameters for update' });
   }
 
   try {  
     if(request.roleType == db.ROLES.ITMANAGER || (request.roleType == db.ROLES.PROFESSOR && request.userId == id)){
-      await Professors.findByIdAndUpdate(id,request.body)
-      response.status(200).send(`Updated successfully.`)
+      await Professors.findByIdAndUpdate(id,request.body);
+      response.status(200).send(`Updated successfully.`);
     }
     else{
-      response.status(403).send(`You can't update other professors information.`)
+      response.status(403).send(`You can't update other professors information.`);
     }
   }
   catch (error) {
     if(error.kind === 'ObjectId' ) {
       return response.status(404).send({
         message: `Cannot update Professor with id=${id}. Maybe Professor was not found!`
-      })
+      });
     }
     
-    response.status(500).send(error)    
+    response.status(500).send(error);
   }
 }
 
@@ -107,4 +107,4 @@ const find_Professor_by_id = async (request, response) => {
     
   }
 }
-export default { add_Professor, update_Professor , delete_Professor, find_Professors, find_Professor_by_id}
+export default { add_Professor, update_Professor , delete_Professor, find_Professors, find_Professor_by_id};

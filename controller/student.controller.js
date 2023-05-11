@@ -1,13 +1,13 @@
 import { request, response } from 'express';
-import db from '../models/index.js'
+import db from '../models/index.js';
 
-const Students = db.students
+const Students = db.students;
 
 const add_Student = async (request, response) => {
-  const {username, password, email} = request.body
+  const {username, password, email} = request.body;
 
     if(!username || !password || !email){
-        return response.status(400).send({ error: 'We need password,username and email to create student.' })
+        return response.status(400).send({ error: 'We need password,username and email to create student.' });
     }
     try{
         var hashedPassword = bcrypt.hashSync(password, 10);
@@ -17,41 +17,41 @@ const add_Student = async (request, response) => {
             password : hashedPassword
           });
         
-        response.status(201).send(`Student created with id=${student.id} successfully.`)
+        response.status(201).send(`Student created with id=${student.id} successfully.`);
     }
     catch(err){
-        return response.status(500).send("There was a problem registering the student.")
+        return response.status(500).send("There was a problem registering the student.");
     }
 }
 
 const update_Student =  async (request, response) => {
   
-  const updates = Object.keys(request.body)
-  const allowedUpdates = Object.keys(Students.schema.tree)
-  const isValidUpdate = updates.every((update) => allowedUpdates.includes(update))
-  const id = request.params.id
+  const updates = Object.keys(request.body);
+  const allowedUpdates = Object.keys(Students.schema.tree);
+  const isValidUpdate = updates.every((update) => allowedUpdates.includes(update));
+  const id = request.params.id;
 
   if (!isValidUpdate) {
-    return response.status(400).send({ error: 'Invalid parameters for update' })
+    return response.status(400).send({ error: 'Invalid parameters for update' });
   }
 
   try {  
     if(request.roleType == db.ROLES.ITMANAGER || (request.roleType == db.ROLES.STUDENT && request.userId == id)){
-        await Students.findByIdAndUpdate(id,request.body)
-        response.status(200).send(`Updated successfully.`)
+        await Students.findByIdAndUpdate(id,request.body);
+        response.status(200).send(`Updated successfully.`);
     }
     else{
-        response.status(403).send(`You can't update other students information.`)
+        response.status(403).send(`You can't update other students information.`);
     }
   }
   catch (error) {
     if(error.kind === 'ObjectId' ) {
       return response.status(404).send({
         message: `Cannot update student with id=${id}. Maybe student was not found!`
-      })
+      });
     }
     
-    response.status(500).send(error)    
+    response.status(500).send(error);
   }
 }
 
@@ -107,4 +107,4 @@ const find_Student_by_id = async (request, response) => {
     
   }
 }
-export default { add_Student, update_Student , delete_Student, find_Students, find_Student_by_id}
+export default { add_Student, update_Student , delete_Student, find_Students, find_Student_by_id};

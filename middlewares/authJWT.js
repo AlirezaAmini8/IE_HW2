@@ -1,5 +1,5 @@
 import db from '../models/index.js';
-import jwt from 'jsonwebtoken'
+import jwt from 'jsonwebtoken';
 
 const verifyRole = (roles) => {
     return async (request, response) => {
@@ -28,4 +28,4 @@ const verifyRole = (roles) => {
 const authJWT = {
     verifyRole
 };
-export {authJWT}
+export {authJWT};

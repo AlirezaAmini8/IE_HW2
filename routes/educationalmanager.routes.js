@@ -1,6 +1,6 @@
-import controller from '../controller/educationalmanagr.controller.js'
-import { authJWT } from '../middlewares/index.js'
-import db from '../models/index.js'
+import controller from '../controller/educationalmanagr.controller.js';
+import { authJWT } from '../middlewares/index.js';
+import db from '../models/index.js';
 
 
 export default function buildEducationalManagerRoutes(route) {
@@ -9,4 +9,4 @@ export default function buildEducationalManagerRoutes(route) {
     route.delete('/admin/manager/:id',[authJWT.verifyRole(db.ROLES.ITMANAGER)], controller.delete_EducationalManager)
     route.get('/admin/managers',[authJWT.verifyRole(db.ROLES.ITMANAGER)], controller.find_EducationalManagers)
     route.get('/admin/manager/:id',[authJWT.verifyRole(db.ROLES.ITMANAGER)], controller.find_EducationalManager_by_id)
-}
+};

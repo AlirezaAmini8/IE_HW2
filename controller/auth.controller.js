@@ -23,7 +23,8 @@ const login = async (request, response) => {
            username : user.id,
            role:user.__t 
         };
-        const accessToken = jwt.sign(tokenPayload, db.secret);
+        
+        jwt.sign(tokenPayload, db.secret);
 
         response.status(200).send({
             id: user._id,
@@ -38,4 +39,4 @@ const login = async (request, response) => {
     }
 }
 
-export default{ login}
+export default{ login};

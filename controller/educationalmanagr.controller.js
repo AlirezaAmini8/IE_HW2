@@ -1,13 +1,13 @@
 import { request, response } from 'express';
-import db from '../models/index.js'
+import db from '../models/index.js';
 
-const EducationalManager = db.educationalManager
+const EducationalManager = db.educationalManager;
 
 const add_EducationalManager = async (request, response) => {
-  const {username, password, email} = request.body
+  const {username, password, email} = request.body;
 
     if(!username || !password || !email){
-        return response.status(400).send({ error: 'We need password,username and email to create educational manager.' })
+        return response.status(400).send({ error: 'We need password,username and email to create educational manager.' });
     }
     try{
         var hashedPassword = bcrypt.hashSync(password, 10);
@@ -17,36 +17,36 @@ const add_EducationalManager = async (request, response) => {
             password : hashedPassword
           });
         
-        response.status(201).send(`Educational manager created with id=${educationalManager.id} successfully.`)
+        response.status(201).send(`Educational manager created with id=${educationalManager.id} successfully.`);
     }
     catch(err){
-        return response.status(500).send("There was a problem registering the educational manager.")
+        return response.status(500).send("There was a problem registering the educational manager.");
     }
 }
 
 const update_EducationalManager =  async (request, response) => {
   
-  const updates = Object.keys(request.body)
-  const allowedUpdates = Object.keys(EducationalManager.schema.tree)
-  const isValidUpdate = updates.every((update) => allowedUpdates.includes(update))
-  const id = request.params.id
+  const updates = Object.keys(request.body);
+  const allowedUpdates = Object.keys(EducationalManager.schema.tree);
+  const isValidUpdate = updates.every((update) => allowedUpdates.includes(update));
+  const id = request.params.id;
 
   if (!isValidUpdate) {
-    return response.status(400).send({ error: 'Invalid parameters for update' })
+    return response.status(400).send({ error: 'Invalid parameters for update' });
   }
 
   try {  
-    await EducationalManager.findByIdAndUpdate(id,request.body)
-    response.status(200).send(`Updated successfully.`)
+    await EducationalManager.findByIdAndUpdate(id,request.body);
+    response.status(200).send(`Updated successfully.`);
   }
   catch (error) {
     if(error.kind === 'ObjectId' ) {
       return response.status(404).send({
         message: `Cannot update educational manager with id=${id}. Maybe educational manager was not found!`
-      })
+      });
     }
     
-    response.status(500).send(error)    
+    response.status(500).send(error);
   }
 }
 
@@ -102,4 +102,4 @@ const find_EducationalManager_by_id = async (request, response) => {
     
   }
 }
-export default { add_EducationalManager, update_EducationalManager , delete_EducationalManager, find_EducationalManagers, find_EducationalManager_by_id}
+export default { add_EducationalManager, update_EducationalManager , delete_EducationalManager, find_EducationalManagers, find_EducationalManager_by_id};

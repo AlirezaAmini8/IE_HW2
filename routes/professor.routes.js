@@ -1,6 +1,6 @@
-import controller from '../controller/professor.controller.js'
-import { authJWT } from '../middlewares/index.js'
-import db from '../models/index.js'
+import controller from '../controller/professor.controller.js';
+import { authJWT } from '../middlewares/index.js';
+import db from '../models/index.js';
 
 
 export default function buildProffesorRoutes(route) {
@@ -11,4 +11,4 @@ export default function buildProffesorRoutes(route) {
     route.get('/admin/Professor/:id',[authJWT.verifyRole(db.ROLES.ITMANAGER)], controller.find_Professor_by_id)
     route.get('/Professors',[authJWT.verifyRole(db.ROLES.EDUCATIONALMANAGER)], controller.find_Professors)
     route.get('/Professor/:id',[authJWT.verifyRole(db.ROLES.EDUCATIONALMANAGER)], controller.find_Professor_by_id)
-}
+};
