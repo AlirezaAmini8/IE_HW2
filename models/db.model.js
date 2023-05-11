@@ -38,8 +38,8 @@ let userSchema = mongoose.Schema({
 
    let approvedCourseSchema = mongoose.Schema({
     name: String,
-    prerequisite: Array(String),
-    requirement: Array(String),
+    prerequisite: Array({ type: mongoose.Schema.Types.ObjectId, ref: 'this'}),
+    requirement: Array({ type: mongoose.Schema.Types.ObjectId, ref: 'this'}),
     Unit: Number,
     field: String
    });
