@@ -9,4 +9,6 @@ export default function buildStudentRoutes(route) {
     route.delete('/admin/student/:id',[authJWT.verifyRole(db.ROLES.ITMANAGER)], controller.delete_Student)
     route.get('/admin/students',[authJWT.verifyRole(db.ROLES.ITMANAGER)], controller.find_Students)
     route.get('/admin/student/:id',[authJWT.verifyRole(db.ROLES.ITMANAGER)], controller.find_Student_by_id)
+    route.get('/students',[authJWT.verifyRole(db.ROLES.EDUCATIONALMANAGER)], controller.find_Students)
+    route.get('/student/:id',[authJWT.verifyRole(db.ROLES.EDUCATIONALMANAGER)], controller.find_Student_by_id)
 }

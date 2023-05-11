@@ -9,4 +9,6 @@ export default function buildProffesorRoutes(route) {
     route.delete('/admin/Professor/:id',[authJWT.verifyRole(db.ROLES.ITMANAGER)], controller.delete_Professor)
     route.get('/admin/Professors',[authJWT.verifyRole(db.ROLES.ITMANAGER)], controller.find_Professors)
     route.get('/admin/Professor/:id',[authJWT.verifyRole(db.ROLES.ITMANAGER)], controller.find_Professor_by_id)
+    route.get('/Professors',[authJWT.verifyRole(db.ROLES.EDUCATIONALMANAGER)], controller.find_Professors)
+    route.get('/Professor/:id',[authJWT.verifyRole(db.ROLES.EDUCATIONALMANAGER)], controller.find_Professor_by_id)
 }
