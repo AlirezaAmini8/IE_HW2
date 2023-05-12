@@ -16,9 +16,9 @@ db.approvedCourse = approvedCourse;
 db.termCourse = termCourse;
 
 const Roles = {
-	PROFESSOR: "professor",
-	STUDENT: "student",
-	EDUCATIONALMANAGER: "educationalmanager",
+	PROFESSOR: "Professor",
+	STUDENT: "Student",
+	EDUCATIONALMANAGER: "Educational Manager",
 	ITMANAGER: "itmanager"
 };
 

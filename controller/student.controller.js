@@ -1,5 +1,6 @@
 import { request, response } from 'express';
 import db from '../models/index.js';
+import bcrypt from 'bcryptjs';
 
 const Students = db.students;
 
@@ -11,15 +12,19 @@ const add_Student = async (request, response) => {
     }
     try{
         var hashedPassword = bcrypt.hashSync(password, 10);
-        const student = await Students.create({
-            id : username,
-            email : email,
-            password : hashedPassword
-          });
+        request.body.password = hashedPassword;
+        const student = await Students.create(
+            request.body
+          );
         
-        response.status(201).send(`Student created with id=${student.id} successfully.`);
+        response.status(201).send(`Student created with id=${username} successfully.`);
     }
     catch(err){
+      if (err.name === 'MongoServerError' && err.code === 11000){
+        return response.status(400).send({
+          message: `Username already taken.`
+        });
+      }
         return response.status(500).send("There was a problem registering the student.");
     }
 }
@@ -45,6 +50,11 @@ const update_Student =  async (request, response) => {
     }
   }
   catch (error) {
+    if (err.name === 'MongoServerError' && err.code === 11000){
+      return response.status(400).send({
+        message: `Username already taken.`
+      });
+    }
     if(error.kind === 'ObjectId' ) {
       return response.status(404).send({
         message: `Cannot update student with id=${id}. Maybe student was not found!`
@@ -91,7 +101,7 @@ const find_Students = async (request, response) => {
 const find_Student_by_id = async (request, response) => {
   const id = request.params.id;
   try {  
-    await Students.findById(id);
+    const data = await Students.findById(id);
     response.status(200).send(data);
     
   } catch (err) {

@@ -1,5 +1,6 @@
 import { request, response } from 'express';
 import db from '../models/index.js';
+import bcrypt from 'bcryptjs';
 
 const EducationalManager = db.educationalManager;
 
@@ -11,15 +12,19 @@ const add_EducationalManager = async (request, response) => {
     }
     try{
         var hashedPassword = bcrypt.hashSync(password, 10);
-        const educationalManager = await EducationalManager.create({
-            id : username,
-            email : email,
-            password : hashedPassword
-          });
+        request.body.password = hashedPassword;
+        const educationalManager = await EducationalManager.create(
+            request.body
+          );
         
-        response.status(201).send(`Educational manager created with id=${educationalManager.id} successfully.`);
+        response.status(201).send(`Educational manager created with id=${username} successfully.`);
     }
     catch(err){
+      if (err.name === 'MongoServerError' && err.code === 11000){
+        return response.status(400).send({
+          message: `Username already taken.`
+        });
+      }
         return response.status(500).send("There was a problem registering the educational manager.");
     }
 }
@@ -86,7 +91,7 @@ const find_EducationalManagers = async (request, response) => {
 const find_EducationalManager_by_id = async (request, response) => {
   const id = request.params.id;
   try {  
-    await EducationalManager.findById(id);
+    const data = await EducationalManager.findById(id);
     response.status(200).send(data);
     
   } catch (err) {

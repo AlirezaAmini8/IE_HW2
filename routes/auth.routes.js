@@ -1,5 +1,4 @@
-import controller from '../controller/auth.controller';
-import db from '../models/index.js';
+import controller from '../controller/auth.controller.js';
 
 
 export default function buildLoginRoutes(route) {

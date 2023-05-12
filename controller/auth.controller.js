@@ -8,29 +8,31 @@ const login = async (request, response) => {
     try {
         if (!username || !password) {
             return response.status(400).send('username and password are require');
-        }
-        const user = await db.users.findOne({id: username});
+        };
+        
+        const user = await db.users.findOne({username: username});
 
         if (!user) {
             return response.status(404).send('User not found.');
         }
         
         var passwordIsValid = await bcrypt.compareSync(password, user.password);
+
         if(!passwordIsValid){
             return response.status(400).send('Password is invalid');
         }
         const tokenPayload = {
-           username : user.id,
-           role:user.__t 
+           id : user._id,
+           role : user.__t
         };
         
-        jwt.sign(tokenPayload, db.secret);
+        const token = jwt.sign(tokenPayload, db.secret);
 
         response.status(200).send({
             id: user._id,
-            username: user.id,
+            username: user.username,
             email:user.email,
-
+            token: token
         });
     } catch (err) {
         response.status(500).send({

@@ -2,9 +2,9 @@ import mongoose from "mongoose";
 
 let userSchema = mongoose.Schema({
     name: String,
-    id: Number,
-    password: String,
-    email: String,
+    username: { type : String , unique : true, required : true },
+    password:   { type : String , required : true },
+    email:  { type : String , required : true },
     phone_number: String
    });
 
@@ -38,8 +38,8 @@ let userSchema = mongoose.Schema({
 
    let approvedCourseSchema = mongoose.Schema({
     name: String,
-    prerequisite: Array({ type: mongoose.Schema.Types.ObjectId, ref: this}),
-    requirement: Array({ type: mongoose.Schema.Types.ObjectId, ref: this}),
+    prerequisite: [{ type: mongoose.Schema.Types.ObjectId, ref: this}],
+    requirement: [{ type: mongoose.Schema.Types.ObjectId, ref: this}],
     Unit: Number,
     field: String
    });

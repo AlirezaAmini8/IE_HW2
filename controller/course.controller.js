@@ -6,17 +6,18 @@ const TermCourse = db.termCourse;
 
 const add_Course = async (request, response) => {
     try{
-        (request.body.isTermCourse == true)? await TermCourse.create(): await ApprovedCourse.create();
-        response.status(201).send(`Course created successfully.`);
+        let data = (request.body.isTermCourse == true)? await TermCourse.create(request.body): await ApprovedCourse.create(request.body);
+        response.status(201).send(data);
       }
       catch(err){
+        console.log(err)
           return response.status(500).send("There was a problem creating the course.");
       }
 }
 const update_Course =  async (request, response) => {
     const updates = Object.keys(request.body);
     const id = request.params.id;
-    const allowedUpdates = (request.body.isTermCourse == true) ? Object.keys(TermCourse.schema.tree): Object.keys(ApprovedCourse.schema.tree);
+    let allowedUpdates = (Boolean(request.query.isTermCourse) == true) ? Object.keys(TermCourse.schema.tree): Object.keys(ApprovedCourse.schema.tree);
     const isValidUpdate = updates.every((update) => allowedUpdates.includes(update));
 
     if (!isValidUpdate) {
@@ -24,7 +25,7 @@ const update_Course =  async (request, response) => {
     }
 
     try {  
-      (request.body.isTermCourse == true) ? await TermCourse.findByIdAndUpdate(id,request.body): await ApprovedCourse.findByIdAndUpdate(id,request.body);
+      (Boolean(request.query.isTermCourse) == true) ? await TermCourse.findByIdAndUpdate(id,request.body): await ApprovedCourse.findByIdAndUpdate(id,request.body);
       response.status(200).send(`Updated successfully.`);
     }
     catch (error) {
@@ -41,7 +42,7 @@ const delete_Course = async (request, response) => {
     const id = request.params.id;
     
     try {  
-        (request.body.isTermCourse == true) ? await TermCourse.findByIdAndRemove(id) : await ApprovedCourse.findByIdAndRemove(id);
+        (Boolean(request.query.isTermCourse) == true) ? await TermCourse.findByIdAndRemove(id) : await ApprovedCourse.findByIdAndRemove(id);
         response.status(200).send({
         message: "Course was deleted successfully!"
         });
@@ -59,11 +60,11 @@ const delete_Course = async (request, response) => {
 }
 const find_Courses = async (request, response) => {
   try {
-    const data = {};
+    let data = {};
     if(request.roleType == db.ROLES.STUDENT || request.roleType == db.ROLES.PROFESSOR){
-        data = (request.body.isTermCourse == true)? await TermCourse.find({field:request.body.field}).populate(["prerequisite","requirement","teacher"]) : await ApprovedCourse.find({field:request.body.field}).populate(["prerequisite","requirement"]);
+        data = await ApprovedCourse.find({field:request.body.field}).populate(["prerequisite","requirement","teacher"]);
     }else{
-        data = (request.body.isTermCourse == true)? await TermCourse.find({}).populate(["prerequisite","requirement","teacher"]) : await ApprovedCourse.find({}).populate(["prerequisite","requirement"]);
+        data = await ApprovedCourse.find({}).populate(["prerequisite","requirement","teacher"]);
     }
     response.status(200).send(data);
     
@@ -77,14 +78,14 @@ const find_Course_by_id = async (request, response) => {
     const id = request.params.id;
 
     try {
-        const data = {};
+        let data = {};
         if(request.roleType == db.ROLES.STUDENT || request.roleType == db.ROLES.PROFESSOR){
-            data = (request.body.isTermCourse == true) ? await TermCourse.findById(id).populate(["prerequisite","requirement","teacher"]) : await ApprovedCourse.findById(id).populate(["prerequisite","requirement"]);
+            data =  await ApprovedCourse.findById(id).populate(["prerequisite","requirement","teacher"]);
             if(data.field != request.body.field){
                 return response.status(403).send({message: 'You can not access other fields course.'});
             }
         }else{
-            data = (request.body.isTermCourse == true) ? await TermCourse.findById(id).populate(["prerequisite","requirement","teacher"]) : await ApprovedCourse.findById(id).populate(["prerequisite","requirement"]);
+            data = await ApprovedCourse.findById(id).populate(["prerequisite","requirement","teacher"]);
         }
         response.status(200).send(data);
       

@@ -1,26 +1,30 @@
 import { request, response } from 'express';
 import db from '../models/index.js';
+import bcrypt from 'bcryptjs';
 
 const Professors = db.professors;
 
 const add_Professor = async (request, response) => {
   const {username, password, email} = request.body;
-
     if(!username || !password || !email){
         return response.status(400).send({ error: 'We need password,username and email to create professor.' });
     }
     try{
         var hashedPassword = bcrypt.hashSync(password, 10);
-        const professor = await Professors.create({
-            id : username,
-            email : email,
-            password : hashedPassword
-          });
-        
-        response.status(201).send(`Professor created with id=${professor.id} successfully.`);
+        request.body.password = hashedPassword;
+        await Professors.create(
+            request.body
+          );
+        response.status(201).send(`Professor created with id=${username} successfully.`);
     }
     catch(err){
-        return response.status(500).send("There was a problem registering the professor.");
+      
+      if (err.name === 'MongoServerError' && err.code === 11000){
+        return response.status(400).send({
+          message: `Username already taken.`
+        });
+      }
+      return response.status(500).send("There was a problem registering the professor.");
     }
 }
 
@@ -45,6 +49,11 @@ const update_Professor =  async (request, response) => {
     }
   }
   catch (error) {
+    if (error.name === 'MongoServerError' && error.code === 11000){
+      return response.status(400).send({
+        message: `Username already taken.`
+      });
+    }
     if(error.kind === 'ObjectId' ) {
       return response.status(404).send({
         message: `Cannot update Professor with id=${id}. Maybe Professor was not found!`
@@ -91,7 +100,7 @@ const find_Professors = async (request, response) => {
 const find_Professor_by_id = async (request, response) => {
   const id = request.params.id;
   try {  
-    await Professors.findById(id);
+    const data = await Professors.findById(id);
     response.status(200).send(data);
     
   } catch (err) {
