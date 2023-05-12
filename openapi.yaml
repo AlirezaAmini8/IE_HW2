@@ -33,7 +33,8 @@ paths:
                 type: object
                 properties:
                   id:
-                    type: objectId
+                    type: string
+                    format: objectid
                   username: 
                     type: string
                   email:
@@ -127,7 +128,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/ApprovedCourse'
+                $ref: '#/components/schemas/ApprovedCourse'
         "403":
           $ref: "#/components/responses/Permission"
         "404":
@@ -150,46 +151,36 @@ paths:
         "500":
           description: problem from server side
           $ref: "#/components/responses/ServerError"
-  /students:
-    get:
-      description: get all students
+  /admin/student:
+    post:
+      description: create a new student
       security:
         - JWTAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Student'
       responses:
-        "200":
+        "201":
           description: success
           content:
             application/json:
               schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Student'
+                $ref: '#/components/schemas/Student'
+        "400":
+          description: Invalid parameters for creating or username already taken
+          $ref: "#/components/responses/BadRequest"
         "500":
           description: problem from server side
           $ref: "#/components/responses/ServerError"
-  /student/{id}:
+  /admin/student/{id}:
     parameters:
       - in: path
         name: id
         schema:
           type: string
         required: true
-    get:
-      description: get a student user
-      security:
-        - JWTAuth: []
-      responses:
-        "200":
-          description: success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Student'
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "500":
-          description: problem from server side
-          $ref: "#/components/responses/ServerError"
     put:
       description: update a student
       security:
@@ -209,12 +200,11 @@ paths:
         "404":
           description: student was not found
           $ref: "#/components/responses/NotFound"
-        "403":
-          description: You can't update other students information.
-          $ref: "#/components/responses/Permission"
         "400":
-          description: Invalid parameters for update
+          description: Invalid parameters or username already taken
           $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Permission"
         "500":
           description: problem from server side
           $ref: "#/components/responses/ServerError"
@@ -234,32 +224,14 @@ paths:
         "500":
           description: problem from server side
           $ref: "#/components/responses/ServerError"
-  
-  /Professors:
     get:
-      description: gets all professors
-      security:
-        - JWTAuth: []
-      responses:
-        "200":
-          description: success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Professor'
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-  /Professor/{id}:
-    parameters:
+      parameters:
       - in: path
         name: id
         schema:
           type: string
         required: true
-    get:
-      description: get a professor user
+      description: get a student
       security:
         - JWTAuth: []
       responses:
@@ -268,210 +240,30 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/Professor'
+                $ref: '#/components/responses/Student'
+        "500":
+          description: problem from server side
+          $ref: "#/components/responses/ServerError"
         "404":
           $ref: "#/components/responses/NotFound"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-    put:
-      description: update a professor profile
-      security:
-        - JWTAuth: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Professor'
-      responses:
-        "200":
-          description: success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/Success'
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-  /admin/Professor:
-    post:
-      description: create a new professor user
-      security:
-        - JWTAuth: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-                $ref: '#/components/schemas/Professor'
-      responses:
-        "200":
-          description: success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/Success'
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-  /admin/Professor/{id}:
-    parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-        required: true
-    delete:
-      description: delete professor user
-      security:
-        - JWTAuth: []
-      responses:
-        "200":
-          description: success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/Success'
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-    get:
-      description: get professor user
-      security:
-        - JWTAuth: []
-      responses:
-        "200":
-          description: success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Professor'
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-    put:
-      description: update professor user
-      security:
-        - JWTAuth: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Professor'
-      responses:
-        "200":
-          description: success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/Success'
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-  /admin/Professors:
-    get:
-      description: gets all professors users
-      security:
-        - JWTAuth: []
-      responses:
-        "200":
-          description: success
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/Professor'
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-  /admin/student:
-    post:
-      description: create new student user
-      security:
-        - JWTAuth: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-                $ref: '#/components/schemas/Student'
-      responses:
-        "200":
-          description: success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/Success'
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-  /admin/student/{id}:
-    parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-        required: true
-    delete:
-      description: delete a student user
-      security:
-        - JWTAuth: []
-      responses:
-        "200":
-          description: success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/Success'
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-    get:
-      description: get student user
-      security:
-        - JWTAuth: []
-      responses:
-        "200":
-          description: success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Student'
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-    put:
-      description: update student user
-      security:
-        - JWTAuth: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Student'
-      responses:
-        "200":
-          description: success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/Success'
-        "400":
-          $ref: "#/components/responses/BadRequest"
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
   /admin/students:
+    get:
+      description: gets all students
+      security:
+        - JWTAuth: []
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Student'
+        "500":
+          description: problem from server side
+          $ref: "#/components/responses/ServerError"
+  /students:
     get:
       description: get all students
       security:
@@ -485,75 +277,71 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/Student'
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-  /admin/manager:
-    post:
-      description: create a new manager user
+        "500":
+          description: problem from server side
+          $ref: "#/components/responses/ServerError"
+  /student/{id}:
+    get:
+      parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+      description: get a student
       security:
         - JWTAuth: []
-      requestBody:
-        content:
-          application/json:
-            schema:
-                $ref: '#/components/schemas/Manager'
       responses:
         "200":
           description: success
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/Success'
+                $ref: '#/components/responses/Student'
+        "500":
+          description: problem from server side
+          $ref: "#/components/responses/ServerError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /admin/Professor:
+    post:
+      description: create a new professor
+      security:
+        - JWTAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Professor'
+      responses:
+        "201":
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Professor'
         "400":
+          description: Invalid parameters for creating or username already taken
           $ref: "#/components/responses/BadRequest"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-  /admin/manager/{id}:
+        "500":
+          description: problem from server side
+          $ref: "#/components/responses/ServerError"
+  /admin/Professor/{id}:
     parameters:
       - in: path
         name: id
         schema:
           type: string
         required: true
-    delete:
-      description: delete a manager user
-      security:
-        - JWTAuth: []
-      responses:
-        "200":
-          description: success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/responses/Success'
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-    get:
-      description: get a manager user
-      security:
-        - JWTAuth: []
-      responses:
-        "200":
-          description: success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Manager'
-        "404":
-          $ref: "#/components/responses/NotFound"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
     put:
-      description: update a manager user
+      description: update a professor
       security:
         - JWTAuth: []
       requestBody:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Manager'
+              $ref: '#/components/schemas/Professor'
       responses:
         "200":
           description: success
@@ -561,15 +349,52 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/responses/Success'
+        "404":
+          description: professor was not found
+          $ref: "#/components/responses/NotFound"
         "400":
+          description: Invalid parameters or username already taken
           $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Permission"
+        "500":
+          description: problem from server side
+          $ref: "#/components/responses/ServerError"
+    delete:
+      description: delete a professor
+      security:
+        - JWTAuth: []
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Success'
         "404":
           $ref: "#/components/responses/NotFound"
-        "401":
-          $ref: "#/components/responses/Unauthorized"
-  /admin/managers:
+        "500":
+          description: problem from server side
+          $ref: "#/components/responses/ServerError"
     get:
-      description: get all managers
+      description: get a professor
+      security:
+        - JWTAuth: []
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Professor'
+        "500":
+          description: problem from server side
+          $ref: "#/components/responses/ServerError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+  /admin/Professors:
+    get:
+      description: get all professors
       security:
         - JWTAuth: []
       responses:
@@ -580,9 +405,186 @@ paths:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/Manager'
-        "401":
-          $ref: "#/components/responses/Unauthorized"
+                  $ref: '#/components/schemas/Professor'
+        "500":
+          description: problem from server side
+          $ref: "#/components/responses/ServerError"
+  /Professor/{id}:
+    put:
+      description: update a professor
+      security:
+        - JWTAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Professor'
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Success'
+        "404":
+          description: professor was not found
+          $ref: "#/components/responses/NotFound"
+        "400":
+          description: Invalid parameters or username already taken
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Permission"
+        "500":
+          description: problem from server side
+          $ref: "#/components/responses/ServerError"
+  /Professors:
+    get:
+      description: get all professors
+      security:
+        - JWTAuth: []
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/Professor'
+        "500":
+          description: problem from server side
+          $ref: "#/components/responses/ServerError"
+  /Professor/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+    get:
+      description: get a professor
+      security:
+        - JWTAuth: []
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Professor'
+        "500":
+          description: problem from server side
+          $ref: "#/components/responses/ServerError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    
+  
+  /admin/manager:
+    post:
+      description: create a new educational manager
+      security:
+        - JWTAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EducationalManager'
+      responses:
+        "201":
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EducationalManager'
+        "400":
+          description: Invalid parameters for creating or username already taken
+          $ref: "#/components/responses/BadRequest"
+        "500":
+          description: problem from server side
+          $ref: "#/components/responses/ServerError"
+  /admin/manager/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
+    delete:
+      description: delete a educational manager
+      security:
+        - JWTAuth: []
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Success'
+        "404":
+          $ref: "#/components/responses/NotFound"
+        "500":
+          description: problem from server side
+          $ref: "#/components/responses/ServerError"
+    get:
+      description: get a educational manager 
+      security:
+        - JWTAuth: []
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EducationalManager'
+        "500":
+          description: problem from server side
+          $ref: "#/components/responses/ServerError"
+        "404":
+          $ref: "#/components/responses/NotFound"
+    put:
+      description: update a educational manager
+      security:
+        - JWTAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/EducationalManager'
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/responses/Success'
+        "404":
+          description: professor was not found
+          $ref: "#/components/responses/NotFound"
+        "400":
+          description: Invalid parameters or username already taken
+          $ref: "#/components/responses/BadRequest"
+        "403":
+          $ref: "#/components/responses/Permission"
+        "500":
+          description: problem from server side
+          $ref: "#/components/responses/ServerError"
+  /admin/managers:
+    get:
+      description: get all educational managers
+      security:
+        - JWTAuth: []
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EducationalManager'
+        "500":
+          description: problem from server side
+          $ref: "#/components/responses/ServerError"
 components:
   responses:
     Success:
@@ -659,11 +661,6 @@ components:
         - username
         - password
         - email
-      
-    ITManager:
-      allOf:
-        - $ref: '#/components/schemas/User'
-        - type: object
     EducationalManager:
       allOf:
         - $ref: '#/components/schemas/User'
@@ -707,13 +704,13 @@ components:
         prerequisite:
           type: array
           items:
-            type: ObjectId
-            $ref: '#/components/schemas/ApprovedCourse'
+            type: string
+            format: objectid
         requirement:
           type: array
           items:
-            type: ObjectId
-            $ref: '#/components/schemas/ApprovedCourse'
+            type: string
+            format: objectid
         Unit:
           type: number
         field:
@@ -735,8 +732,8 @@ components:
             examLocation:
               type: string
             teacher:
-              type: ObjectId
-              - $ref: '#/components/schemas/Professor'
+              type: string
+              format: objectid
             capacity:
               type: number
             term:
