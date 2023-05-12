@@ -128,7 +128,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ApprovedCourse'
+                $ref: "#/components/schemas/ApprovedCourse"
         "403":
           $ref: "#/components/responses/Permission"
         "404":
@@ -240,7 +240,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/Student'
+                $ref: '#/components/schemas/Student'
         "500":
           description: problem from server side
           $ref: "#/components/responses/ServerError"
@@ -297,7 +297,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/responses/Student'
+                $ref: '#/components/schemas/Student'
         "500":
           description: problem from server side
           $ref: "#/components/responses/ServerError"
@@ -410,6 +410,12 @@ paths:
           description: problem from server side
           $ref: "#/components/responses/ServerError"
   /Professor/{id}:
+    parameters:
+      - in: path
+        name: id
+        schema:
+          type: string
+        required: true
     put:
       description: update a professor
       security:
@@ -437,6 +443,22 @@ paths:
         "500":
           description: problem from server side
           $ref: "#/components/responses/ServerError"
+    get:
+      description: get a professor
+      security:
+        - JWTAuth: []
+      responses:
+        "200":
+          description: success
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Professor'
+        "500":
+          description: problem from server side
+          $ref: "#/components/responses/ServerError"
+        "404":
+          $ref: "#/components/responses/NotFound"
   /Professors:
     get:
       description: get all professors
@@ -454,31 +476,6 @@ paths:
         "500":
           description: problem from server side
           $ref: "#/components/responses/ServerError"
-  /Professor/{id}:
-    parameters:
-      - in: path
-        name: id
-        schema:
-          type: string
-        required: true
-    get:
-      description: get a professor
-      security:
-        - JWTAuth: []
-      responses:
-        "200":
-          description: success
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/Professor'
-        "500":
-          description: problem from server side
-          $ref: "#/components/responses/ServerError"
-        "404":
-          $ref: "#/components/responses/NotFound"
-    
-  
   /admin/manager:
     post:
       description: create a new educational manager
