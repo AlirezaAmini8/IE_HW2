@@ -18,6 +18,9 @@
     "common-log-format": "^2.0.1",
     "dotenv": "^16.0.3",
     "jsonwebtoken": "^9.0.0",
-    "morgan": "^1.10.0"
+    "morgan": "^1.10.0",
+    "swagger-jsdoc": "^6.2.8",
+    "swagger-ui-express": "^4.6.3",
+    "yamljs": "^0.3.0"
   }
 }

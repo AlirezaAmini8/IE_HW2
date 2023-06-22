@@ -47,10 +47,10 @@ let userSchema = mongoose.Schema({
    let approvedCourse = mongoose.model("Approved Course", approvedCourseSchema);
    
    let termCourseSchema = mongoose.Schema({
-    classDate: String,
-    classTime: String,
-    examDate: String,
-    examTime: String,
+    classDate: Date,
+    classTime: Date,
+    examDate: Date,
+    examTime: Date,
     examLocation: String,
     teacher: { type: mongoose.Schema.Types.ObjectId, ref: 'Professor'},
     capacity: Number,

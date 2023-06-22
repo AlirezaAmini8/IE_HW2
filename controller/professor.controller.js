@@ -12,10 +12,10 @@ const add_Professor = async (request, response) => {
     try{
         var hashedPassword = bcrypt.hashSync(password, 10);
         request.body.password = hashedPassword;
-        await Professors.create(
+        const professor = await Professors.create(
             request.body
           );
-        response.status(201).send(`Professor created with id=${username} successfully.`);
+        response.status(201).send(professor);
     }
     catch(err){
       
@@ -41,8 +41,8 @@ const update_Professor =  async (request, response) => {
 
   try {  
     if(request.roleType == db.ROLES.ITMANAGER || (request.roleType == db.ROLES.PROFESSOR && request.userId == id)){
-      await Professors.findByIdAndUpdate(id,request.body);
-      response.status(200).send(`Updated successfully.`);
+      const professor = await Professors.findByIdAndUpdate(id,request.body);
+      response.status(200).send(professor);
     }
     else{
       response.status(403).send(`You can't update other professors information.`);
@@ -68,8 +68,8 @@ const delete_Professor = async (request, response) => {
   const id = request.params.id;
   
   try {  
-    await Professors.findByIdAndRemove(id);
-    response.status(200).send({
+    const professor = await Professors.findByIdAndRemove(id);
+    response.status(200).send({professor,
     message: "Professor was deleted successfully!"
     });
     

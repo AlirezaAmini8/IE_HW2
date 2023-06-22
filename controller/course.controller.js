@@ -6,8 +6,8 @@ const TermCourse = db.termCourse;
 
 const add_Course = async (request, response) => {
     try{
-        let data = (request.body.isTermCourse == true)? await TermCourse.create(request.body): await ApprovedCourse.create(request.body);
-        response.status(201).send(data);
+        let course = (request.body.isTermCourse == true)? await TermCourse.create(request.body): await ApprovedCourse.create(request.body);
+        response.status(201).send(course);
       }
       catch(err){
         console.log(err)
@@ -25,8 +25,8 @@ const update_Course =  async (request, response) => {
     }
 
     try {  
-      (Boolean(request.query.isTermCourse) == true) ? await TermCourse.findByIdAndUpdate(id,request.body): await ApprovedCourse.findByIdAndUpdate(id,request.body);
-      response.status(200).send(`Updated successfully.`);
+      let course = (Boolean(request.query.isTermCourse) == true) ? await TermCourse.findByIdAndUpdate(id,request.body): await ApprovedCourse.findByIdAndUpdate(id,request.body);
+      response.status(200).send(course);
     }
     catch (error) {
       if(error.kind === 'ObjectId' ) {
@@ -42,8 +42,8 @@ const delete_Course = async (request, response) => {
     const id = request.params.id;
     
     try {  
-        (Boolean(request.query.isTermCourse) == true) ? await TermCourse.findByIdAndRemove(id) : await ApprovedCourse.findByIdAndRemove(id);
-        response.status(200).send({
+        let course = (Boolean(request.query.isTermCourse) == true) ? await TermCourse.findByIdAndRemove(id) : await ApprovedCourse.findByIdAndRemove(id);
+        response.status(200).send({course ,
         message: "Course was deleted successfully!"
         });
       

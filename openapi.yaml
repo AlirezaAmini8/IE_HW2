@@ -5,7 +5,7 @@ info:
   version: "1.0"
 
 servers:
-  - url: https:///127.0.0.1:3000/HW2_db
+  - url: https:///127.0.0.1:3000
 
 paths:
   /login:
@@ -719,13 +719,13 @@ components:
         - type: object
           properties:
             classDate:
-              type: string
+              type: date
             classTime:
-              type: string
+              type: date
             examDate:
-              type: string
+              type: date
             examTime:
-              type: string
+              type: date
             examLocation:
               type: string
             teacher:

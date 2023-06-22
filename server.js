@@ -4,6 +4,8 @@ import db from './models/index.js';
 import route from './routes/index.js';
 import morgan from 'morgan';
 import fs from 'fs';
+import swaggerUI from 'swagger-ui-express';
+import YAML from 'yamljs';
 
 const app = express();
 
@@ -15,6 +17,9 @@ db.mongoose.connect(db.url).then(()=>{
 });
 
 app.use(express.json());
+
+var nativeObject = YAML.load('./openapi.yaml');
+app.use('/api-docs', swaggerUI.serve, swaggerUI.setup(nativeObject));
 
 // create a write stream (in append mode)
 var accessLogStream = fs.createWriteStream('RequestLogs.txt', { flags: 'a' });

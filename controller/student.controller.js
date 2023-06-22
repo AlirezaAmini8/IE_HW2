@@ -17,7 +17,7 @@ const add_Student = async (request, response) => {
             request.body
           );
         
-        response.status(201).send(`Student created with id=${username} successfully.`);
+        response.status(201).send(student);
     }
     catch(err){
       if (err.name === 'MongoServerError' && err.code === 11000){
@@ -42,8 +42,8 @@ const update_Student =  async (request, response) => {
 
   try {  
     if(request.roleType == db.ROLES.ITMANAGER || (request.roleType == db.ROLES.STUDENT && request.userId == id)){
-        await Students.findByIdAndUpdate(id,request.body);
-        response.status(200).send(`Updated successfully.`);
+        const student = await Students.findByIdAndUpdate(id,request.body);
+        response.status(200).send(student);
     }
     else{
         response.status(403).send(`You can't update other students information.`);
@@ -69,8 +69,8 @@ const delete_Student = async (request, response) => {
   const id = request.params.id;
   
   try {  
-    await Students.findByIdAndRemove(id);
-    response.status(200).send({
+    const student = await Students.findByIdAndRemove(id);
+    response.status(200).send({student,
     message: "Student was deleted successfully!"
     });
     

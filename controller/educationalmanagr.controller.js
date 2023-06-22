@@ -17,7 +17,7 @@ const add_EducationalManager = async (request, response) => {
             request.body
           );
         
-        response.status(201).send(`Educational manager created with id=${username} successfully.`);
+        response.status(201).send(educationalManager);
     }
     catch(err){
       if (err.name === 'MongoServerError' && err.code === 11000){
@@ -41,8 +41,8 @@ const update_EducationalManager =  async (request, response) => {
   }
 
   try {  
-    await EducationalManager.findByIdAndUpdate(id,request.body);
-    response.status(200).send(`Updated successfully.`);
+    const educationalManager = await EducationalManager.findByIdAndUpdate(id,request.body);
+    response.status(200).send(educationalManager);
   }
   catch (error) {
     if(error.kind === 'ObjectId' ) {
@@ -59,8 +59,8 @@ const delete_EducationalManager = async (request, response) => {
   const id = request.params.id;
   
   try {  
-    await EducationalManager.findByIdAndRemove(id);
-    response.status(200).send({
+    const educationalManager = await EducationalManager.findByIdAndRemove(id);
+    response.status(200).send({educationalManager ,
     message: "Educational manager was deleted successfully!"
     });
     

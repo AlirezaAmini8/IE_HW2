@@ -5,7 +5,7 @@ const verifyRole = (...roles) => {
     return async (request, response,next) => {
       var token = request.headers['authorization'];
       if (!token) {
-          return response.status(403).send({ auth: false, message: 'No token provided.' });
+          return response.status(401).send({ auth: false, message: 'No token provided.' });
       }
       try{
         const decoded = await jwt.verify(token.split(' ')[1], db.secret);
